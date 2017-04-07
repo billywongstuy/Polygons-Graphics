@@ -2,10 +2,21 @@ from display import *
 from matrix import *
 from math import *
 
-def add_polygon( points, x0, y0, z0, x1, y1, z1, x2, y2, z2 ):
-    add_point( points, x0, y0, z0 )
-    add_point( points, x1, y1, z1 )
-    add_point( points, x2, y2, z2 )
+def add_polygon( points, x0, y0, z0, x1, y1, z1, x2, y2, z2, color=None ):
+    if color == None:
+        add_point( points, x0, y0, z0 )
+        add_point( points, x1, y1, z1 )
+        add_point( points, x2, y2, z2 )
+    else:
+        add_point( points, x0, y0, z0, color )
+        add_point( points, x1, y1, z1, color )
+        add_point( points, x2, y2, z2, color )
+
+
+#def add_colored_polygon( points, x0, y0, z0, x1, y1, z1, x2, y2, z2, color ):
+#    add_point( points, x0, y0, z0, color )
+#    add_point( points, x1, y1, z1, color )
+#    add_point( points, x2, y2, z2, color )
 
 
 def calculate(p0, p1, p2):
@@ -13,8 +24,7 @@ def calculate(p0, p1, p2):
     B = [p2[0]-p0[0],p2[1]-p0[1],p2[2]-p0[2]]
     #N = [A[1]*B[2]-A[2]*B[1],A[2]*B[0]-A[0]*B[2],A[0]*B[1]-A[1]*B[0]]
 
-    return A[0]*B[1]-A[1]*B[0]
-    #return 1 #placeholder
+    return A[0]*B[1]-A[1]*B[0]  #return 1 #placeholder
 
 def draw_polygons( points, screen, color ):
     if len(points) < 3:
@@ -27,6 +37,10 @@ def draw_polygons( points, screen, color ):
         p0 = points[i]
         p1 = points[i+1]
         p2 = points[i+2]
+
+
+        if len(p0) > 4:
+            color = [p0[4][0],p0[4][1],p0[4][2]]
 
         normal = calculate(p0,p1,p2)
         
@@ -122,16 +136,18 @@ def add_sphere( edges, cx, cy, cz, r, step ):
         for longt in range(longt_start, longt_stop+1):
             index = lat * num_steps + longt
 
+            #circles are vertical
+            
             x0 = points[index][0]
             y0 = points[index][1]
             z0 = points[index][2]
             
-            #below
+            #right
             x1 = points[(index+1) % len(points)][0]
             y1 = points[(index+1) % len(points)][1]
             z1 = points[(index+1) % len(points)][2]
 
-            #right
+            #below
             x2 = points[(index + num_steps) % len(points)][0]
             y2 = points[(index + num_steps) % len(points)][1]
             z2 = points[(index + num_steps) % len(points)][2]
@@ -141,8 +157,10 @@ def add_sphere( edges, cx, cy, cz, r, step ):
             y3 = points[(index + num_steps + 1) % len(points)][1]
             z3 = points[(index + num_steps + 1) % len(points)][2]
 
-            add_polygon(edges,x1,y1,z1,x2,y2,z2,x0,y0,z0)
-            add_polygon(edges,x2,y2,z2,x1,y1,z1,x3,y3,z3)
+            if longt != longt_stop:
+                add_polygon(edges,x1,y1,z1,x2,y2,z2,x0,y0,z0)
+            if lat != lat_stop-1:
+                add_polygon(edges,x2,y2,z2,x1,y1,z1,x3,y3,z3)
             
 
 def generate_sphere( cx, cy, cz, r, step ):
@@ -273,9 +291,15 @@ def add_edge( matrix, x0, y0, z0, x1, y1, z1 ):
     add_point(matrix, x0, y0, z0)
     add_point(matrix, x1, y1, z1)
     
-def add_point( matrix, x, y, z=0 ):
-    matrix.append( [x, y, z, 1] )
-    
+def add_point( matrix, x, y, z=0, color=None ):
+    if color == None:
+        matrix.append( [x, y, z, 1] )
+    else:
+        matrix.append( [x, y, z, 1, color] )
+
+#def add_colored_point( matrix, x, y, z=0, color=None):
+#        matrix.append( [x, y, z, 1, color] )
+        
 
 
 
