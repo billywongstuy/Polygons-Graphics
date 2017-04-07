@@ -13,6 +13,10 @@ __pycache__/
 # Buffers
 *~
 
+# Personal Testing
+test
+testscript
+
 # Distribution / packaging
 .Python
 env/
