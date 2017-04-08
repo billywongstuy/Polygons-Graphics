@@ -2,15 +2,10 @@ from display import *
 from matrix import *
 from math import *
 
-def add_polygon( points, x0, y0, z0, x1, y1, z1, x2, y2, z2, color=None ):
-    if color == None:
-        add_point( points, x0, y0, z0 )
-        add_point( points, x1, y1, z1 )
-        add_point( points, x2, y2, z2 )
-    else:
-        add_point( points, x0, y0, z0, color )
-        add_point( points, x1, y1, z1, color )
-        add_point( points, x2, y2, z2, color )
+def add_polygon( points, x0, y0, z0, x1, y1, z1, x2, y2, z2, color=None):
+    add_point( points, x0, y0, z0, color )
+    add_point( points, x1, y1, z1, color )
+    add_point( points, x2, y2, z2, color )
 
 
 #def add_colored_polygon( points, x0, y0, z0, x1, y1, z1, x2, y2, z2, color ):
@@ -27,6 +22,7 @@ def calculate(p0, p1, p2):
     return A[0]*B[1]-A[1]*B[0]  #return 1 #placeholder
 
 def draw_polygons( points, screen, color ):
+
     if len(points) < 3:
         print 'Need at least 3 points to draw'
         return
@@ -38,11 +34,12 @@ def draw_polygons( points, screen, color ):
         p1 = points[i+1]
         p2 = points[i+2]
 
-
         if len(p0) > 4:
+            #print p0[4]
             color = [p0[4][0],p0[4][1],p0[4][2]]
 
-        normal = calculate(p0,p1,p2)
+
+            normal = calculate(p0,p1,p2)
         
         if normal > 0:
             draw_line(int(p0[0]),int(p0[1]),int(p1[0]),int(p1[1]),screen,color) 
@@ -51,7 +48,7 @@ def draw_polygons( points, screen, color ):
 
         i += 3
 
-def add_box( points, x, y, z, width, height, depth ):
+def add_box( points, x, y, z, width, height, depth, color=None):
     x1 = x + width
     y1 = y - height
     z1 = z - depth
@@ -60,63 +57,63 @@ def add_box( points, x, y, z, width, height, depth ):
     add_polygon( points,   
                  x, y, z, 
                  x, y1, z,
-                 x1, y1, z) 
+                 x1, y1, z, color) 
     add_polygon( points, 
                  x1, y1, z, 
                  x1, y, z,
-                 x, y, z)
+                 x, y, z, color)
 
     #RIGHT
     add_polygon( points, 
                  x1, y, z, 
                  x1, y1, z,
-                 x1, y1, z1) 
+                 x1, y1, z1, color) 
     add_polygon( points, 
                  x1, y1, z1, 
                  x1, y, z1,
-                 x1, y, z)
+                 x1, y, z, color)
 
     #BACK
     add_polygon( points, 
                  x1, y, z1, 
                  x1, y1, z1,
-                 x, y1, z1) 
+                 x, y1, z1, color) 
     add_polygon( points, 
                  x, y1, z1, 
                  x, y, z1,
-                 x1, y, z1)
+                 x1, y, z1, color)
 
     #LEFT
     add_polygon( points, 
                  x, y, z1, 
                  x, y1, z1,
-                 x, y1, z) 
+                 x, y1, z, color) 
     add_polygon( points, 
                  x, y1, z, 
                  x, y, z,
-                 x, y, z1)
+                 x, y, z1, color)
     
     #TOP
     add_polygon( points, 
                  x, y, z1, 
                  x, y, z,
-                 x1, y, z) 
+                 x1, y, z, color) 
     add_polygon( points, 
                  x1, y, z, 
                  x1, y, z1,
-                 x, y, z1)
+                 x, y, z1, color)
 
     #BOTTOM
     add_polygon( points, 
                  x1, y1, z1, 
                  x1, y1, z,
-                 x, y1, z) 
+                 x, y1, z, color) 
     add_polygon( points, 
                  x, y1, z, 
                  x, y1, z1,
-	         x1, y1, z1)
+	         x1, y1, z1, color)
 
-def add_sphere( edges, cx, cy, cz, r, step ):
+def add_sphere( edges, cx, cy, cz, r, step, color=None ):
     points = generate_sphere(cx, cy, cz, r, step)
     num_steps = int(1/step+0.1)
 
@@ -158,9 +155,9 @@ def add_sphere( edges, cx, cy, cz, r, step ):
             z3 = points[(index + num_steps + 1) % len(points)][2]
 
             if longt != longt_stop:
-                add_polygon(edges,x1,y1,z1,x2,y2,z2,x0,y0,z0)
+                add_polygon(edges,x1,y1,z1,x2,y2,z2,x0,y0,z0,color)
             if lat != lat_stop-1:
-                add_polygon(edges,x2,y2,z2,x1,y1,z1,x3,y3,z3)
+                add_polygon(edges,x2,y2,z2,x1,y1,z1,x3,y3,z3,color)
             
 
 def generate_sphere( cx, cy, cz, r, step ):
@@ -185,7 +182,7 @@ def generate_sphere( cx, cy, cz, r, step ):
             #print 'rotation: %d\tcircle%d'%(rotation, circle)
     return points
         
-def add_torus( edges, cx, cy, cz, r0, r1, step ):
+def add_torus( edges, cx, cy, cz, r0, r1, step, color=None ):
     points = generate_torus(cx, cy, cz, r0, r1, step)
     num_steps = int(1/step+0.1)
     
@@ -217,8 +214,8 @@ def add_torus( edges, cx, cy, cz, r0, r1, step ):
             y3 = points[(index + num_steps + 1) % len(points)][1]
             z3 = points[(index + num_steps + 1) % len(points)][2]
 
-            add_polygon(edges,x1,y1,z1,x2,y2,z2,x0,y0,z0)
-            add_polygon(edges,x2,y2,z2,x1,y1,z1,x3,y3,z3)
+            add_polygon(edges,x1,y1,z1,x2,y2,z2,x0,y0,z0,color)
+            add_polygon(edges,x2,y2,z2,x1,y1,z1,x3,y3,z3,color)
             
 
 def generate_torus( cx, cy, cz, r0, r1, step ):
@@ -295,7 +292,8 @@ def add_point( matrix, x, y, z=0, color=None ):
     if color == None:
         matrix.append( [x, y, z, 1] )
     else:
-        matrix.append( [x, y, z, 1, color] )
+        c = color[:]
+        matrix.append( [x, y, z, 1, c] )
 
 #def add_colored_point( matrix, x, y, z=0, color=None):
 #        matrix.append( [x, y, z, 1, color] )
