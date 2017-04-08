@@ -1,6 +1,6 @@
 # Polygons-Graphics
 
-# Extra Code
+# Extra Code (color for 3D shapes)
 
 ## draw.py 
 
@@ -19,4 +19,12 @@
 ## parser.py
 
 * 'color' added to ARG_COMMANDS
+* color argument added to calls of add_box, add_sphere, and add_torus
 * line == 'color case added to parser
+
+
+# Why This Works
+
+* when using matrix_multi, it only modifies the values in the first 4 columns
+  * for r in range(4):
+    	m2[point][r] = (VALUE)
