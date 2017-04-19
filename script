@@ -1,14 +1,21 @@
 color
+123 67 199
+
+torus
+0 0 0 25 125
+
+move
+0 -120 0
+
+apply
+
+color
 234 87 13
 
 sphere
 0 0 0 100
 
-color
-123 67 199
-
-torus
-0 0 0 25 125
+ident
 
 rotate
 x 22.5

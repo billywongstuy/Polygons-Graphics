@@ -198,8 +198,10 @@ def add_torus( edges, cx, cy, cz, r0, r1, step, color=None ):
             y3 = points[(index + num_steps + 1) % len(points)][1]
             z3 = points[(index + num_steps + 1) % len(points)][2]
 
-            add_polygon(edges,x1,y1,z1,x2,y2,z2,x0,y0,z0,color)
-            add_polygon(edges,x2,y2,z2,x1,y1,z1,x3,y3,z3,color)
+            if longt != longt_stop:
+                add_polygon(edges,x1,y1,z1,x2,y2,z2,x0,y0,z0,color)
+            if lat != lat_stop-1:
+                add_polygon(edges,x2,y2,z2,x1,y1,z1,x3,y3,z3,color)
             
 
 def generate_torus( cx, cy, cz, r0, r1, step ):
