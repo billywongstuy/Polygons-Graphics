@@ -7,26 +7,18 @@ def add_polygon( points, x0, y0, z0, x1, y1, z1, x2, y2, z2, color=None):
     add_point( points, x1, y1, z1, color )
     add_point( points, x2, y2, z2, color )
 
-
-#def add_colored_polygon( points, x0, y0, z0, x1, y1, z1, x2, y2, z2, color ):
-#    add_point( points, x0, y0, z0, color )
-#    add_point( points, x1, y1, z1, color )
-#    add_point( points, x2, y2, z2, color )
-
-
 def calculate(p0, p1, p2):
     A = [p1[0]-p0[0],p1[1]-p0[1],p1[2]-p0[2]]
     B = [p2[0]-p0[0],p2[1]-p0[1],p2[2]-p0[2]]
     #N = [A[1]*B[2]-A[2]*B[1],A[2]*B[0]-A[0]*B[2],A[0]*B[1]-A[1]*B[0]]
-
-    return A[0]*B[1]-A[1]*B[0]  #return 1 #placeholder
+    return A[0]*B[1]-A[1]*B[0]
 
 def draw_polygons( points, screen, color ):
-
+    
     if len(points) < 3:
         print 'Need at least 3 points to draw'
         return
-    
+
     i = 0
     while i < len(points) - 2:
 
@@ -35,10 +27,7 @@ def draw_polygons( points, screen, color ):
         p2 = points[i+2]
 
         if len(p0) > 4:
-            #print p0[4]
             color = [p0[4][0],p0[4][1],p0[4][2]]
-
-
             normal = calculate(p0,p1,p2)
         
         if normal > 0:
@@ -116,12 +105,6 @@ def add_box( points, x, y, z, width, height, depth, color=None):
 def add_sphere( edges, cx, cy, cz, r, step, color=None ):
     points = generate_sphere(cx, cy, cz, r, step)
     num_steps = int(1/step+0.1)
-
-    # if step = 0.01
-    # 101 columns (lat) with 101 rows (longt)
-    # index is current place
-    # below is index+1
-    # right is adding the amount of columns (101 or lat)
     
     lat_start = 0
     lat_stop = num_steps
@@ -134,7 +117,8 @@ def add_sphere( edges, cx, cy, cz, r, step, color=None ):
             index = lat * num_steps + longt
 
             #circles are vertical
-            
+
+            #current
             x0 = points[index][0]
             y0 = points[index][1]
             z0 = points[index][2]
@@ -295,12 +279,7 @@ def add_point( matrix, x, y, z=0, color=None ):
         c = color[:]
         matrix.append( [x, y, z, 1, c] )
 
-#def add_colored_point( matrix, x, y, z=0, color=None):
-#        matrix.append( [x, y, z, 1, color] )
         
-
-
-
 def draw_line( x0, y0, x1, y1, screen, color ):
 
     #swap points if going right -> left
